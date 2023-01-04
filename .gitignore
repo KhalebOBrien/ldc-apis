@@ -4,5 +4,4 @@ assets/uploads
 dist
 package-lock.json
 yarn-error.log
-yarn.lock
 /tmp
