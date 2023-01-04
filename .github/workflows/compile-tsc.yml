@@ -1,0 +1,28 @@
+name: 💎 Compile TSC without emitting files 💎
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  tsc:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: 18.19.2
+    steps:
+    - name: 🚚 Commit Checkout
+      uses: actions/checkout@v3
+    - name: 🔶 Install Node v${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    - name: 🔷 npm install
+      run: npm i --dev
+    - name: 🧹 Clean build directory
+      run: rm -rf dist && mkdir dist
+    - name: 🌀 Running TSC
+      uses: icrawl/action-tsc@v1
+    - name: ⚙️ Compiling TS
+      run: npm run compile:noEmit
