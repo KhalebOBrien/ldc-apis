@@ -1,0 +1,43 @@
+{
+  "name": "ldc-apis",
+  "version": "1.0.0",
+  "main": "src/app.ts",
+  "author": "404: CTO_not_found <ebukauche52@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
+    "test": "vitest --run --reporter verbose",
+    "test:watch": "vitest",
+    "compile": "./node_modules/.bin/tsc --project ./tsconfig.json",
+    "compile:noEmit": "./node_modules/.bin/tsc --project ./tsconfig.json --noEmit",
+    "serve:js": "node dist/index",
+    "npm:clear": "rm -rf node_modules/ && echo \"Cleared node modules\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhalebOBrien/ldc-apis"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.13",
+    "@types/express": "^4.17.15",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.11.18",
+    "bcrypt": "^5.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0",
+    "knex": "^2.3.0",
+    "lodash": "^4.17.21",
+    "mysql2": "^2.3.3",
+    "ts-node": "^10.9.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20",
+    "typescript": "^4.9.4",
+    "vitest": "^0.26.3"
+  }
+}
