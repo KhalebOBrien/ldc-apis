@@ -1,10 +1,10 @@
 import { knex } from 'knex';
 import 'dotenv/config';
 
-import { development, production, test } from './Environment';
+import { development, production, test } from './EnvironmentConfig';
 
 const getEnvironment = () => {
-  switch (process.env.NODE_ENV) {
+  switch (process.env.MODE) {
     case 'production': return production;
     case 'test': return test;
 

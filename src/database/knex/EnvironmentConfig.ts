@@ -3,12 +3,14 @@ import path from 'path';
 
 
 export const development: Knex.Config = {
-  client: 'mysql3',
+  client: 'mysql2',
   useNullAsDefault: true,
   connection: {
-    database: process.env.DB_NAME,
-    user: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD
+    host : process.env.DATABASE_HOST,
+    port : Number(process.env.DATABASE_PORT || 3306),
+    database: process.env.DATABASE_NAME,
+    user: process.env.DATABASE_USERNAME,
+    password: process.env.DATABASE_PASSWORD
   },
   migrations: {
     directory: path.resolve(__dirname, '..', 'migrations'),
