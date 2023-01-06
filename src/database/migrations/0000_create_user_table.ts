@@ -10,6 +10,7 @@ export async function up(knex: Knex) {
       table.string('other_name', 225).notNullable().checkLength('>=', 3)
       table.string('email', 100).unique().notNullable().checkLength('>=', 5)
       table.string('phone_number', 20).notNullable().checkLength('>=', 6)
+      table.string('password', 255).notNullable().checkLength('>=', 6)
       table.timestamps(true, true)
     })
     .then(() => {

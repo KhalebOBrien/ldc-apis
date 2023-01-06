@@ -26,19 +26,18 @@ const startServer = () => {
 
 if (process.env.MIGRATE_ON_START == 'true') {
   console.log('===== RUNNING MIGRATIONS =====')
-
   Knex.migrate
     .latest()
     .then(() => {
       console.log('===== DATABASE MIGRATION COMPLETED =====')
-      console.log('===== SEEDING DATABASE =====')
+      /*console.log('===== SEEDING DATABASE =====')
       Knex.seed
         .run()
         .then(() => {
           console.log('===== SEEDING COMPLETED =====')
           startServer()
         })
-        .catch(console.log)
+        .catch(console.log)*/
     })
     .catch(console.log)
 } else {
