@@ -13,17 +13,13 @@ export class UserProvider {
       const [result] = await Knex(ETableNames.users).insert({
         ...data,
         password: hashedPassword,
-      })
+      }).returning('id').then()
 
-      // if (typeof result === 'object') {
-      //   return result
-      // } else if (typeof result === 'number') {
-      //   return result
-      // }
-
-      console.log(result);
-
-      return result;
+      if (typeof result === 'object') {
+        return result
+      } else if (typeof result === 'number') {
+        return result
+      }
 
       return new Error(
         `Error while inserting record in ${ETableNames.users} table`,
@@ -36,7 +32,7 @@ export class UserProvider {
     }
   }
 
-  static getByEmail = async (email: string): Promise<IUser | Error> => {
+  static findOneByEmail = async (email: string): Promise<IUser | Error> => {
     try {
       const result = await Knex(ETableNames.users)
         .select('*')

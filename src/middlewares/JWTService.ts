@@ -2,6 +2,7 @@ import * as jwt from 'jsonwebtoken'
 
 interface IJwtData {
   user_id: number
+  email: string
   remember_me: boolean
 }
 
