@@ -13,7 +13,7 @@ export class UserProvider {
       const [result] = await Knex(ETableNames.users).insert({
         ...data,
         password: hashedPassword,
-      }).returning('id').then()
+      })
 
       if (typeof result === 'object') {
         return result

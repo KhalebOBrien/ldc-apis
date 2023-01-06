@@ -2,7 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import { JwtHandler, ErrorHelper } from '../middlewares'
 import { StatusCodes } from 'http-status-codes'
 import bcrypt from 'bcrypt'
-import { UserProvider, IUser } from '../database'
+import { UserProvider, WalletProvider, IUser, IWallet } from '../database'
+import { number } from 'yup'
 
 interface IBodyProps extends Omit<IUser, 'id'> {}
 
@@ -12,18 +13,22 @@ export class AuthController {
     res: Response,
   ): Promise<Response> => {
     try {
-      console.log(req.body)
-      const user = await UserProvider.create(req.body)
-      if (user) {
-        console.log(`user id = ${user.email}`)
+      const userId = await UserProvider.create(req.body)
+      if (typeof userId == 'number') {
+        // create user wallet
+        const walletData: Pick<IWallet, 'user_id'|'amount'> = {user_id:userId, amount:0.0}
+        const wallet = await WalletProvider.create(walletData)
+
+        const userObj: Partial<IUser> = { ...req.body, id: userId }
+        delete userObj.password
 
         const token = JwtHandler.createToken({
-          user_id: user.id,
-          email: user.email,
+          user_id: userId,
+          email: userObj.email || req.body.email,
           remember_me: false,
         })
 
-        return res.status(StatusCodes.CREATED).json({ user, token })
+        return res.status(StatusCodes.CREATED).json({ user: userObj, token })
       }
       return res.status(StatusCodes.BAD_REQUEST)
     } catch (err) {
