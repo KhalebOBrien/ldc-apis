@@ -12,7 +12,12 @@
     "compile": "./node_modules/.bin/tsc --project ./tsconfig.json",
     "compile:noEmit": "./node_modules/.bin/tsc --project ./tsconfig.json --noEmit",
     "serve:js": "node dist/app",
-    "npm:clear": "rm -rf node_modules/ && echo \"Cleared node modules\""
+    "npm:clear": "rm -rf node_modules/ && echo \"Cleared node modules\"",
+    "knex:rollback-all": "knex --knexfile ./src/database/knex/EnvironmentConfig.ts migrate:rollback --all",
+    "knex:rollback": "knex --knexfile ./src/database/knex/EnvironmentConfig.ts migrate:rollback",
+    "knex:migrate": "knex --knexfile ./src/database/knex/EnvironmentConfig.ts migrate:latest",
+    "knex:down": "knex --knexfile ./src/database/knex/EnvironmentConfig.ts migrate:down",
+    "knex:seed": "knex --knexfile ./src/database/knex/EnvironmentConfig.ts seed:run"
   },
   "repository": {
     "type": "git",

@@ -1,7 +1,5 @@
-
-
 export enum ETableNames {
-  user = 'user',
-  wallet = 'wallet',
-  transaction = 'transaction',
+  users = 'users',
+  wallets = 'wallets',
+  transactions = 'transactions',
 }
