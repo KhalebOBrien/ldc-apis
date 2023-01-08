@@ -27,6 +27,23 @@ export class WalletProvider {
     }
   }
 
+  static updateWallet = async (data: Pick<IWallet, 'user_id'|'amount'>): Promise<void | Error> => {
+    try {
+      const result = await Knex(ETableNames.wallets)
+      .update(data)
+      .where('id', '=', data.user_id);
+
+      if (result > 0) return;
+
+      return new Error(`Record not Found in ${ETableNames.wallets} table`)
+    } catch (error) {
+      console.log(error)
+      return new Error(
+        `An error occured while searching for record in ${ETableNames.wallets} table`,
+      )
+    }
+  }
+
   static findOneByUserId = async (userId: number): Promise<IWallet | Error> => {
     try {
       const result = await Knex(ETableNames.wallets)

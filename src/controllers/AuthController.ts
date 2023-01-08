@@ -2,14 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 import { JwtHandler, ErrorHelper } from '../middlewares'
 import { StatusCodes } from 'http-status-codes'
 import bcrypt from 'bcrypt'
-import { UserProvider, WalletProvider, IUser, IWallet } from '../database'
-import { number } from 'yup'
+import { UserProvider, WalletProvider, IUser, IWallet, IUserLogin } from '../database'
 
-interface IBodyProps extends Omit<IUser, 'id'> {}
+interface IResgisterBodyProps extends Omit<IUser, 'id'> {}
+interface ILoginBodyProps extends IUserLogin {}
 
 export class AuthController {
   static register = async (
-    req: Request<{}, {}, IBodyProps>,
+    req: Request<{}, {}, IResgisterBodyProps>,
     res: Response,
   ): Promise<Response> => {
     try {
@@ -37,24 +37,55 @@ export class AuthController {
     }
   }
 
-  static login = async (req: Request, res: Response): Promise<Response> => {
-    const { email, password, remember_me } = req.body
+  static login = async (req: Request<{}, {}, ILoginBodyProps>, res: Response): Promise<Response> => {
     try {
-      const user: IUser | Error = await UserProvider.findOneByEmail(email)
+      const user: IUser | Error = await UserProvider.findOneByEmail(req.body.email)
       if (user instanceof Error) {
         throw Error('invalid credentials')
       }
 
       if (user.password) {
         const correctPwd: Boolean = await bcrypt.compare(
-          password,
+          req.body.password,
           user.password,
         )
         if (correctPwd) {
           const token: any = JwtHandler.createToken({
             user_id: user.id,
             email: user.email,
-            remember_me: remember_me,
+            remember_me: req.body.remember_me,
+          })
+
+          const userObj: Partial<IUser> = { ...user }
+          delete userObj.password
+          return res.status(StatusCodes.OK).json({ user: userObj, token })
+        }
+      }
+      // failed credentials
+      throw Error('invalid credentials')
+    } catch (err) {
+      const error = ErrorHelper.handle(err)
+      return res.status(StatusCodes.UNAUTHORIZED).json({ error })
+    }
+  }
+  
+  static requiresAuth = async (req: Request, res: Response, next: NextFunction): Promise<Response> => {
+    try {
+      const user: IUser | Error = await UserProvider.findOneByEmail(req.body.email)
+      if (user instanceof Error) {
+        throw Error('invalid credentials')
+      }
+
+      if (user.password) {
+        const correctPwd: Boolean = await bcrypt.compare(
+          req.body.password,
+          user.password,
+        )
+        if (correctPwd) {
+          const token: any = JwtHandler.createToken({
+            user_id: user.id,
+            email: user.email,
+            remember_me: req.body.remember_me,
           })
 
           const userObj: Partial<IUser> = { ...user }
