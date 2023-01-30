@@ -1,9 +1,10 @@
-import { IUser , IUserLogin} from '../../database'
+import { IUser , IUserLogin, IWallet} from '../../database'
 import * as yup from 'yup'
 import { validator } from './Validator'
 
 interface IRegisterBodyProps extends Omit<IUser, 'id' | 'created_at' | 'updated_at'> {}
 interface ILoginBodyProps extends IUserLogin {}
+interface IFundWalletBodyProps extends Pick<IWallet, 'amount'> {}
 
 export class Validation {
   static signUpValidation = validator((getSchema) => ({
@@ -24,6 +25,14 @@ export class Validation {
         email: yup.string().required().email().min(5),
         password: yup.string().required().min(8),
         remember_me: yup.boolean().required()
+      }),
+    ),
+  }))
+
+  static fundWalletValidation = validator((getSchema) => ({
+    body: getSchema<IFundWalletBodyProps>(
+      yup.object().shape({
+        amount: yup.number().required()
       }),
     ),
   }))

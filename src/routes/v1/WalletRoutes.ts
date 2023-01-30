@@ -4,4 +4,4 @@ import { Validation } from "../../middlewares/validation/Validation";
 
 export const WalletRoutes: Router = express.Router();
 
-WalletRoutes.post("/wallet/fund", Validation.signUpValidation, AuthController.register);
+WalletRoutes.post("/wallet/fund", Validation.fundWalletValidation, WalletController.fundWallet);
